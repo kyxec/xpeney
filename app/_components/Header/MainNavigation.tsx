@@ -81,20 +81,21 @@ export default function MainNavigation() {
             <NavigationMenuList>
                 {navigation.map((item) => (
                     <NavigationMenuItem key={item.name}>
-                        <Link href={item.href} legacyBehavior passHref>
-                            <NavigationMenuLink
-                                className={cn(
-                                    navigationMenuTriggerStyle(),
-                                    "flex items-center",
-                                    pathname === item.href
-                                        ? "bg-accent text-accent-foreground"
-                                        : "text-muted-foreground hover:text-foreground"
-                                )}
-                            >
+                        <NavigationMenuLink
+                            asChild
+                            className={cn(
+                                navigationMenuTriggerStyle(),
+                                "flex items-center",
+                                pathname === item.href
+                                    ? "bg-accent text-accent-foreground"
+                                    : "text-muted-foreground hover:text-foreground"
+                            )}
+                        >
+                            <Link href={item.href}>
                                 {item.icon}
                                 {item.name}
-                            </NavigationMenuLink>
-                        </Link>
+                            </Link>
+                        </NavigationMenuLink>
                     </NavigationMenuItem>
                 ))}
             </NavigationMenuList>
