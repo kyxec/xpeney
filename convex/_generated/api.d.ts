@@ -17,6 +17,7 @@ import type * as auth from "../auth.js";
 import type * as http from "../http.js";
 import type * as model_uploads from "../model/uploads.js";
 import type * as model_users from "../model/users.js";
+import type * as tags from "../tags.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -31,6 +32,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   "model/uploads": typeof model_uploads;
   "model/users": typeof model_users;
+  tags: typeof tags;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

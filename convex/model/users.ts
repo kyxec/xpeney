@@ -1,7 +1,6 @@
-import { WithoutSystemFields } from 'convex/server';
 import { Id } from '../_generated/dataModel';
 import { MutationCtx, QueryCtx } from '../_generated/server';
-import { Doc, getAuthUserId } from "@convex-dev/auth/server";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 // Define a more complete user update type
 type UserUpdateData = {
@@ -69,8 +68,8 @@ export async function updateUserById(
     // Add any other fields that might have changed
     for (const [key, value] of Object.entries(data)) {
         if (key !== 'name' && key !== 'avatarUrlId' && key !== 'email' &&
-            value !== undefined && value !== (user as any)[key]) {
-            (updates as any)[key] = value;
+            value !== undefined && value !== (user as Record<string, unknown>)[key]) {
+            (updates as Record<string, unknown>)[key] = value;
         }
     }
 

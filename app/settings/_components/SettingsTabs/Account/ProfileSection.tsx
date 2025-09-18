@@ -194,6 +194,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border">
                                         <div className="flex items-center space-x-2">
+                                            {/* eslint-disable-next-line jsx-a11y/alt-text */}
                                             <Image className="h-4 w-4 text-green-600" />
                                             <div className="text-sm">
                                                 <p className="font-medium text-foreground">{selectedImage.name}</p>

@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Type-check project",
+			"type": "shell",
+			"command": "node -e \"require('typescript').exec ? require('typescript').exec(['--noEmit']) : console.log('Use bun/npm script for tsc')\"",
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
+		}
+	]
+}

@@ -2,8 +2,7 @@ import GitHub from "@auth/core/providers/github";
 import { convexAuth } from "@convex-dev/auth/server";
 import * as Users from "./model/users";
 import * as Uploads from "./model/uploads";
-import { query, mutation, internalMutation, internalAction } from "./_generated/server";
-import { internal } from "./_generated/api";
+import { query, mutation, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
@@ -19,6 +18,7 @@ export const updateProfile = internalMutation({
     avatarUrlId: v.optional(v.id("_storage")),
     email: v.optional(v.string()),
   },
+  returns: v.null(),
   handler: async (ctx, args) => {
     await Users.updateUserById(ctx, {
       userId: args.userId,
@@ -32,6 +32,23 @@ export const updateProfile = internalMutation({
 });
 
 export const getMe = query({
+  args: {},
+  returns: v.union(
+    v.object({
+      _id: v.id("users"),
+      _creationTime: v.number(),
+      name: v.optional(v.string()),
+      image: v.optional(v.string()),
+      email: v.optional(v.string()),
+      emailVerificationTime: v.optional(v.number()),
+      phone: v.optional(v.string()),
+      phoneVerificationTime: v.optional(v.number()),
+      isAnonymous: v.optional(v.boolean()),
+      avatarUrlId: v.optional(v.id("_storage")),
+      avatarUrl: v.union(v.string(), v.null()),
+    }),
+    v.null()
+  ),
   handler: async (ctx) => {
     return Users.getCurrentUser(ctx);
   },
@@ -43,6 +60,7 @@ export const updateMyProfile = mutation({
     avatarUrlId: v.optional(v.id("_storage")),
     email: v.optional(v.string()),
   },
+  returns: v.null(),
   handler: async (ctx, args) => {
     const currentUserId = await Users.getCurrentUser(ctx);
     if (!currentUserId) {
@@ -58,6 +76,8 @@ export const updateMyProfile = mutation({
 });
 
 export const generateUploadUrl = mutation({
+  args: {},
+  returns: v.string(),
   handler: async (ctx) => {
     const currentUser = await Users.getCurrentUser(ctx);
     if (!currentUser) {
