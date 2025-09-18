@@ -29,6 +29,8 @@ export default function TagManager({ preloadedTags }: TagManagerProps) {
   const currentAction = getParam('action') as 'create' | 'edit' | 'share' | 'delete' | null;
   const currentSelected = getParam('selected');
   const currentSearch = getParam('search') || '';
+  const currentSort = (getParam('sort') as 'name' | 'date' | 'usage') || 'name';
+  const currentOrder = (getParam('order') as 'asc' | 'desc') || 'asc';
 
   const handleCreateTag = () => {
     setParam('action', 'create', true); // Use shallow routing for dialog actions
@@ -45,7 +47,8 @@ export default function TagManager({ preloadedTags }: TagManagerProps) {
   // Calculate active filters count
   const activeFiltersCount = [
     currentSearch,
-    getParam('includeShared')
+    currentSort !== 'name',
+    currentOrder !== 'asc'
   ].filter(Boolean).length;
 
   return (

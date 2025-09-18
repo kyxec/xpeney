@@ -32,7 +32,6 @@ export const create = mutation({
     name: v.string(),
     description: v.optional(v.string()),
     color: v.optional(v.string()),
-    isPrivate: v.boolean(),
   },
   returns: v.id("tags"),
   handler: async (ctx, args) => {
@@ -66,7 +65,6 @@ export const create = mutation({
       description: args.description?.trim() || undefined,
       color: args.color || "#6b7280", // Default gray color
       ownerId: userId,
-      isPrivate: args.isPrivate,
       createdAt: now,
       updatedAt: now,
     });
@@ -89,7 +87,6 @@ export const list = query({
       description: v.optional(v.string()),
       color: v.optional(v.string()),
       ownerId: v.id("users"),
-      isPrivate: v.boolean(),
       createdAt: v.number(),
       updatedAt: v.number(),
       shareCount: v.optional(v.number()),
@@ -133,8 +130,14 @@ export const list = query({
       for (const share of tagShares) {
         const tag = await ctx.db.get(share.tagId);
         if (tag) {
+          const shareCount = await ctx.db
+            .query("tagShares")
+            .withIndex("by_tagId", (q) => q.eq("tagId", tag._id))
+            .collect();
+
           sharedTags.push({
             ...tag,
+            shareCount: shareCount.length,
             permission: share.permission,
             sharedBy: await ctx.db.get(share.sharedByUserId),
             isOwner: false,
@@ -203,7 +206,6 @@ export const update = mutation({
     name: v.optional(v.string()),
     description: v.optional(v.string()),
     color: v.optional(v.string()),
-    isPrivate: v.optional(v.boolean()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -245,7 +247,6 @@ export const update = mutation({
     if (args.name !== undefined) updateData.name = args.name.trim();
     if (args.description !== undefined) updateData.description = args.description?.trim() || undefined;
     if (args.color !== undefined) updateData.color = args.color;
-    if (args.isPrivate !== undefined) updateData.isPrivate = args.isPrivate;
 
     await ctx.db.patch(args.id, updateData);
     return null;

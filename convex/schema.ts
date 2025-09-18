@@ -23,7 +23,6 @@ const schema = defineSchema({
         description: v.optional(v.string()),
         color: v.optional(v.string()),
         ownerId: v.id("users"),
-        isPrivate: v.boolean(),
         createdAt: v.number(),
         updatedAt: v.number(),
     })
@@ -42,6 +41,30 @@ const schema = defineSchema({
         .index("by_tagId", ["tagId"])
         .index("by_sharedWithUserId", ["sharedWithUserId"])
         .index("by_tagId_and_sharedWithUserId", ["tagId", "sharedWithUserId"]),
+
+    // Tag invitations
+    tagInvitations: defineTable({
+        tagId: v.id("tags"),
+        invitedEmail: v.string(),
+        invitedByUserId: v.id("users"),
+        permission: v.union(v.literal("viewer"), v.literal("editor")),
+        status: v.union(
+            v.literal("pending"),
+            v.literal("accepted"),
+            v.literal("declined"),
+            v.literal("expired")
+        ),
+        message: v.optional(v.string()),
+        expiresAt: v.number(),
+        createdAt: v.number(),
+        updatedAt: v.number(),
+        respondedAt: v.optional(v.number()),
+    })
+        .index("by_tagId", ["tagId"])
+        .index("by_invitedEmail", ["invitedEmail"])
+        .index("by_invitedByUserId", ["invitedByUserId"])
+        .index("by_status", ["status"])
+        .index("by_invitedEmail_and_status", ["invitedEmail", "status"]),
 
     // Expenses table
     expenses: defineTable({

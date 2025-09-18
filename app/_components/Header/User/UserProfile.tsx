@@ -7,7 +7,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { User, Mail, Calendar, Shield } from "lucide-react";
-import { getUserInitials, formatDate, getTruncatedUserId, getUserImage } from "@/lib/user-utils";
+import { getUserInitials, getTruncatedUserId, getUserImage } from "@/lib/user-utils";
+import { formatDate } from "@/lib/date-utils";
 
 export default function UserProfile({ preloadedUser }: { preloadedUser: Preloaded<typeof api.auth.getMe> }) {
     const user = usePreloadedQuery(preloadedUser);

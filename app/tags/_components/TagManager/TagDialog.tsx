@@ -21,7 +21,6 @@ interface Tag {
     name: string;
     description?: string;
     color?: string;
-    isPrivate: boolean;
 }
 
 interface TagDialogProps {
@@ -36,7 +35,6 @@ interface TagFormData {
     name: string;
     description: string;
     color: string;
-    isPrivate: boolean;
 }
 
 const PRESET_COLORS = [
@@ -57,7 +55,6 @@ export default function TagDialog({ isOpen, mode, tagId, onClose, tags }: TagDia
             name: '',
             description: '',
             color: PRESET_COLORS[0],
-            isPrivate: false,
         },
     });
 
@@ -72,14 +69,12 @@ export default function TagDialog({ isOpen, mode, tagId, onClose, tags }: TagDia
                 name: '',
                 description: '',
                 color: PRESET_COLORS[0],
-                isPrivate: false,
             });
         } else if (isOpen && mode === 'edit' && existingTag) {
             reset({
                 name: existingTag.name,
                 description: existingTag.description || '',
                 color: existingTag.color || PRESET_COLORS[0],
-                isPrivate: existingTag.isPrivate,
             });
         }
     }, [isOpen, mode, existingTag, reset]);
@@ -91,7 +86,6 @@ export default function TagDialog({ isOpen, mode, tagId, onClose, tags }: TagDia
                     name: data.name.trim(),
                     description: data.description.trim() || undefined,
                     color: data.color,
-                    isPrivate: data.isPrivate,
                 });
                 toast.success('Tag created successfully');
             } else if (mode === 'edit' && tagId) {
@@ -100,7 +94,6 @@ export default function TagDialog({ isOpen, mode, tagId, onClose, tags }: TagDia
                     name: data.name.trim(),
                     description: data.description.trim() || undefined,
                     color: data.color,
-                    isPrivate: data.isPrivate,
                 });
                 toast.success('Tag updated successfully');
             }
@@ -192,20 +185,7 @@ export default function TagDialog({ isOpen, mode, tagId, onClose, tags }: TagDia
                         </div>
                     </div>
 
-                    {/* Privacy Setting */}
-                    <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-                        <div className="space-y-1">
-                            <Label htmlFor="private" className="text-sm font-medium">Private Tag</Label>
-                            <p className="text-xs text-muted-foreground">
-                                Only you can see and use this tag
-                            </p>
-                        </div>
-                        <Switch
-                            id="private"
-                            checked={watch('isPrivate')}
-                            onCheckedChange={(checked) => setValue('isPrivate', checked)}
-                        />
-                    </div>
+                    {/* Privacy removed */}
 
                     {/* Actions */}
                     <div className="flex flex-col sm:flex-row gap-3 pt-2">

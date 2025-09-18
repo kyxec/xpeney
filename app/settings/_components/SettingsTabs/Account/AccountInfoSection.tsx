@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { formatDate } from "@/lib/user-utils";
+import { formatDate } from "@/lib/date-utils";
 import { User, Mail, Calendar, Shield } from "lucide-react";
 
 interface User {

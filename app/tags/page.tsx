@@ -24,7 +24,8 @@ export default async function TagsPage({ searchParams }: TagsPageProps) {
   const preloadedTags = await preloadQuery(
     api.tags.list,
     {
-      includeShared: params.includeShared === 'true',
+      // Default to true when the param is not provided
+      includeShared: params.includeShared === undefined ? true : params.includeShared === 'true',
       search: params.search || undefined,
       sort: params.sort || 'name',
       order: params.order || 'asc',

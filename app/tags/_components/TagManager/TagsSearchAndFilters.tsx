@@ -23,11 +23,10 @@ interface TagsSearchAndFiltersProps {
 }
 
 export default function TagsSearchAndFilters({ isOpen, onClose }: TagsSearchAndFiltersProps) {
-    const { getParam, getBooleanParam, setParams } = useUrlState({ scroll: false });
+    const { getParam, setParams } = useUrlState({ scroll: false });
 
     // Local state - only updated to URL when Apply is clicked
     const [search, setSearch] = useState('');
-    const [includeShared, setIncludeShared] = useState(false);
     const [sort, setSort] = useState<'name' | 'date' | 'usage'>('name');
     const [order, setOrder] = useState<'asc' | 'desc'>('asc');
 
@@ -35,7 +34,6 @@ export default function TagsSearchAndFilters({ isOpen, onClose }: TagsSearchAndF
     useEffect(() => {
         if (isOpen) {
             setSearch(getParam('search') || '');
-            setIncludeShared(getBooleanParam('includeShared'));
             setSort((getParam('sort') as 'name' | 'date' | 'usage') || 'name');
             setOrder((getParam('order') as 'asc' | 'desc') || 'asc');
         }
@@ -51,7 +49,6 @@ export default function TagsSearchAndFilters({ isOpen, onClose }: TagsSearchAndF
 
     const handleClearAll = () => {
         setSearch('');
-        setIncludeShared(false);
         setSort('name');
         setOrder('asc');
     };
@@ -60,7 +57,6 @@ export default function TagsSearchAndFilters({ isOpen, onClose }: TagsSearchAndF
         // Only update URL when Apply is clicked
         setParams({
             search: search || null,
-            includeShared: includeShared || null,
             sort: sort === 'name' ? null : sort,
             order: order === 'asc' ? null : order
         });
@@ -70,21 +66,16 @@ export default function TagsSearchAndFilters({ isOpen, onClose }: TagsSearchAndF
     const handleCancel = () => {
         // Reset local state to current URL values and close
         setSearch(getParam('search') || '');
-        setIncludeShared(getBooleanParam('includeShared'));
         setSort((getParam('sort') as 'name' | 'date' | 'usage') || 'name');
         setOrder((getParam('order') as 'asc' | 'desc') || 'asc');
         onClose();
     };
 
     // Count active local filters (includeShared should NOT count as a filter)
-    const activeFiltersCount = [
-        search,
-        sort !== 'name',
-        order !== 'asc'
-    ].filter(Boolean).length;
+    const activeFiltersCount = [search, sort !== 'name', order !== 'asc'].filter(Boolean).length;
 
     // Show chips/clear when any filter differs from defaults (includeShared included)
-    const hasAnyChanges = Boolean(search) || includeShared || sort !== 'name' || order !== 'asc';
+    const hasAnyChanges = Boolean(search) || sort !== 'name' || order !== 'asc';
 
     if (!isOpen) return null;
 
@@ -118,20 +109,6 @@ export default function TagsSearchAndFilters({ isOpen, onClose }: TagsSearchAndF
                                 <X className="h-3.5 w-3.5" />
                             </Button>
                         )}
-                    </div>
-
-                    {/* Include Shared Toggle */}
-                    <div className="flex items-center justify-between rounded-md border bg-muted/20 px-3 py-2.5">
-                        <div className="flex items-center gap-2">
-                            <Users className="h-4 w-4 text-muted-foreground" />
-                            <Label htmlFor="include-shared" className="text-sm">Include shared</Label>
-                        </div>
-                        <Switch
-                            id="include-shared"
-                            checked={includeShared}
-                            onCheckedChange={(v) => setIncludeShared(!!v)}
-                            aria-label="Include shared tags"
-                        />
                     </div>
 
                     {/* Sort + Order */}
@@ -184,11 +161,6 @@ export default function TagsSearchAndFilters({ isOpen, onClose }: TagsSearchAndF
                             {search && (
                                 <Badge variant="secondary" className="text-xs px-2 py-0.5">
                                     &ldquo;{search.length > 15 ? search.slice(0, 15) + '...' : search}&rdquo;
-                                </Badge>
-                            )}
-                            {includeShared && (
-                                <Badge variant="secondary" className="text-xs px-2 py-0.5">
-                                    Shared
                                 </Badge>
                             )}
                             {sort !== 'name' && (
@@ -269,24 +241,6 @@ export default function TagsSearchAndFilters({ isOpen, onClose }: TagsSearchAndF
                             )}
                         </div>
 
-                        {/* Include shared icon toggle */}
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    type="button"
-                                    variant={includeShared ? 'default' : 'outline'}
-                                    size="sm"
-                                    aria-pressed={includeShared}
-                                    onClick={() => setIncludeShared((v) => !v)}
-                                    className="h-9 px-2"
-                                >
-                                    <Users className="h-4 w-4" />
-                                    <span className="sr-only">Include shared</span>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Include shared tags</TooltipContent>
-                        </Tooltip>
-
                         {/* Sort */}
                         <div>
                             <Select value={sort} onValueChange={(v) => handleSortChange(v as 'name' | 'date' | 'usage')}>
@@ -343,9 +297,6 @@ export default function TagsSearchAndFilters({ isOpen, onClose }: TagsSearchAndF
                             <div className="flex items-center gap-2">
                                 {search && (
                                     <Badge variant="secondary" className="hidden md:inline-flex">Search</Badge>
-                                )}
-                                {includeShared && (
-                                    <Badge variant="secondary" className="hidden md:inline-flex">Shared</Badge>
                                 )}
                                 {(sort !== 'name' || order !== 'asc') && (
                                     <Badge variant="secondary" className="hidden md:inline-flex">{sort}{order === 'desc' ? ' • Desc' : ''}</Badge>

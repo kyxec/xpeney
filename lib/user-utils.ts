@@ -26,58 +26,6 @@ export function getUserInitials(name?: string, email?: string): string {
 }
 
 /**
- * Format a timestamp to a readable date string
- * @param timestamp - Unix timestamp in milliseconds
- * @returns Formatted date string (e.g., "January 15, 2024")
- */
-export function formatDate(timestamp: number): string {
-    return new Date(timestamp).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-}
-
-/**
- * Format a timestamp to a relative time string
- * @param timestamp - Unix timestamp in milliseconds
- * @returns Relative time string (e.g., "2 days ago")
- */
-export function formatRelativeTime(timestamp: number): string {
-    const now = Date.now();
-    const diff = now - timestamp;
-
-    const minute = 60 * 1000;
-    const hour = minute * 60;
-    const day = hour * 24;
-    const week = day * 7;
-    const month = day * 30;
-    const year = day * 365;
-
-    if (diff < minute) {
-        return 'Just now';
-    } else if (diff < hour) {
-        const minutes = Math.floor(diff / minute);
-        return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
-    } else if (diff < day) {
-        const hours = Math.floor(diff / hour);
-        return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
-    } else if (diff < week) {
-        const days = Math.floor(diff / day);
-        return `${days} ${days === 1 ? 'day' : 'days'} ago`;
-    } else if (diff < month) {
-        const weeks = Math.floor(diff / week);
-        return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
-    } else if (diff < year) {
-        const months = Math.floor(diff / month);
-        return `${months} ${months === 1 ? 'month' : 'months'} ago`;
-    } else {
-        const years = Math.floor(diff / year);
-        return `${years} ${years === 1 ? 'year' : 'years'} ago`;
-    }
-}
-
-/**
  * Get user's display name with fallback
  * @param name - User's full name
  * @param email - User's email address
